@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="pt">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AUXILIO @GHOST</title>
+  
+  <style>
+    /* --- FUNDO COM MUITO MAIS EFEITO --- */
+    #particles-js { 
+        position: fixed; 
+        width: 100%; 
+        height: 100%; 
+        z-index: 1; 
+        top: 0; 
+        left: 0; 
+        background-color: #000;
+    }
+    #login-screen {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: #000;
+        z-index: 999999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .iphone-login-card {
+        width: 90%;
+        max-width: 320px;
+        background: rgba(15, 0, 7, 0.98); 
+        border: 2px solid #ff1493;
+        border-radius: 35px;
+        padding: 40px 20px;
+        text-align: center;
+        box-shadow: 0 0 50px rgba(255, 20, 147, 0.6);
+        box-sizing: border-box;
+    }
+    .user-photo {
+        width: 115px;
+        height: 115px;
+        border-radius: 50%;
+        border: 3px solid #ff1493;
+        margin-bottom: 15px;
+        object-fit: cover;
+        box-shadow: 0 0 20px #ff1493;
+    }
+    .iphone-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 18px;
+        background: rgba(0, 0, 0, 1);
+        border: 1px solid #ff1493;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 16px;
+        margin-bottom: 20px;
+        text-align: center;
+        outline: none;
+    }
+    .iphone-btn {
+        width: 100%;
+        padding: 16px;
+        background: #ff1493;
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 0 15px rgba(255, 20, 147, 0.6);
+    }
+    #error-msg {
+        color: #ff3333;
+        font-size: 12px;
+        margin-top: 15px;
+        font-weight: bold;
+        display: none;
+        text-transform: uppercase;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    /* --- ESTILOS DO MENU --- */
+    * { -webkit-tap-highlight-color: transparent; outline: none !important; user-select: none; }
+    body { margin: 0; padding: 0; background-color: #000; color: #fff; font-family: sans-serif; overflow: hidden; width: 100vw; height: 100vh; }
+    
+    .menu-container { 
+        position: fixed; 
+        top: 50%; 
+        left: 50%; 
+        transform: translate(-50%, -50%) scale(1.05); 
+        z-index: 99999; 
+        width: 92%; 
+        max-width: 340px; 
+        display: none; 
+    }
+    .menu { background: rgba(10, 10, 10, 0.98); border: 1px solid #ff1493; border-radius: 15px 15px 0 0; padding: 20px; text-align: center; box-shadow: 0 0 40px rgba(255, 20, 147, 0.5); }
+    .menu-title { font-size: 16px; font-weight: bold; color: #fff; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+    hr { border: 0; border-top: 2px solid #ff1493; margin: 10px 0; box-shadow: 0 0 15px #ff1493; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+    .tab { flex: 1; padding: 10px; background: #1a1a1a; border: none; color: #888; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; transition: 0.3s; }
+    .tab.active { background: #ff1493 !important; color: #fff !important; box-shadow: 0 0 10px rgba(255, 20, 147, 0.5); }
+    .content { text-align: left; }
+    .option-row { display: flex; align-items: center; gap: 12px; margin: 12px 0; font-size: 13px; color: #eee; }
+    .custom-box { width: 18px; height: 18px; background: #222; border: 1px solid #333; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: transparent; }
+    input:checked + .custom-box { background: #ff1493; border-color: #ff1493; color: #fff; }
+    .slider-container { margin: 20px 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .slider { flex: 1; accent-color: #ff1493; }
+    .combobox { width: 100%; padding: 12px; background: #111; color: #fff; border: 1px solid #ff1493; border-radius: 8px; margin: 10px 0; font-size: 13px; }
+    .radio-dot { width: 14px; height: 14px; background: #222; border: 1px solid #444; border-radius: 50%; }
+    input:checked + .radio-dot { background: #ff1493; box-shadow: 0 0 8px #ff1493; }
+    .inject-container { background: #111; padding: 15px; border-radius: 0 0 15px 15px; border: 1px solid #ff1493; border-top: none; }
+    #injectButton { width: 100%; padding: 14px; background: #ff1493; border: none; color: #fff; font-weight: bold; border-radius: 10px; cursor: pointer; text-transform: uppercase; font-size: 13px; }
+    .separator { height: 1px; background: #222; margin: 15px 0; }
+    .aimbot-title { font-size: 12px; color: #ff1493; text-align: center; margin-bottom: 5px; font-weight: bold; text-transform: uppercase; }
+    
+    /* CRONOMETRO ESTILO */
+    #cronometro { color: #00ff88; font-family: monospace; font-size: 14px; font-weight: bold; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+ </head>
+ <body>
+  <div id="particles-js"></div>
+  <div id="login-screen">
+      <div class="iphone-login-card">
+          <img src="https://i.postimg.cc/3xwn5cYx/38782a39668670ff219c6b5eae09492f.jpg" class="user-photo">
+          <h2 style="color:#fff; margin:0; letter-spacing: 1px;">Ghost Sensi</h2>
+          <p style="color:rgba(255,255,255,0.6); font-size:11px; margin-top:5px; margin-bottom:25px;">SISTEMA PRIVADO</p>
+          <input type="password" id="inputKey" class="iphone-input" placeholder="DIGITE SUA KEY">
+          <button class="iphone-btn" onclick="checkLogin()">ACESSAR PAINEL</button>
+          
+          <div id="error-msg"></div>
+      </div>
+  </div>
+  <div class="menu-container" id="menuMain">
+   <div class="menu">
+    <div class="menu-title">AUXILIO BY @GHOST</div>
+    <hr>
+    <div class="tabs">
+     <button id="btn-aimbot" class="tab active" onclick="showTab('aimbot')">Aimbot</button>
+     <button id="btn-info" class="tab" onclick="showTab('info')">Info</button>
+    </div>
+    
+    <div class="content">
+     <div id="aimbotTab">
+      <div class="option-row"> 
+          <label style="cursor:pointer;"><input type="checkbox" style="display:none"> <div class="custom-box">✔</div></label>
+          <span>Ativar Auxílio</span>
+      </div> 
+      <div class="option-row"> 
+          <label style="cursor:pointer;"><input type="checkbox" style="display:none"> <div class="custom-box">✔</div></label>
+          <span>Ativar Fov</span>
+      </div>
+      <div class="option-row"> 
+          <label style="cursor:pointer;"><input type="checkbox" style="display:none"> <div class="custom-box">✔</div></label>
+          <span>Precisão Máxima</span>
+      </div>
+      <div class="separator"></div>
+      <div class="slider-container">
+       <input type="range" min="0" max="10" value="4" class="slider" id="fovSlider"> 
+       <span style="font-size:13px; min-width:45px;">Fov: <span id="fovValue">4</span></span>
+      </div>
+      <select class="combobox"> 
+          <option>Auxilio Head</option> 
+          <option>Auxilio Recoil</option> 
+          <option>Auxilio Sensi</option> 
+      </select>
+      <div class="separator"></div>
+      <div class="aimbot-title">Tipo de Aimbot</div>
+      <div style="display:flex; justify-content:space-around; margin-top:10px;">
+       <div style="display:flex; align-items:center; gap:8px;"> 
+           <label style="cursor:pointer;"><input type="radio" name="aimbotType" style="display:none"> <div class="radio-dot"></div></label>
+           <span style="font-size:13px;">Ao Atirar</span>
+       </div> 
+       <div style="display:flex; align-items:center; gap:8px;"> 
+           <label style="cursor:pointer;"><input type="radio" name="aimbotType" style="display:none"> <div class="radio-dot"></div></label>
+           <span style="font-size:13px;">Ao Olhar</span>
+       </div>
+      </div>
+     </div>
+     <div id="infoTab" style="display:none;">
+      <p style="font-size: 13px;"><strong>Criador:</strong> <span style="color:#ff1493;">@auxilio.ghoatt.2.0</span></p>
+      <p style="font-size: 13px;"><strong>Key:</strong> <span id="info-key" style="color:#ff1493;">---</span></p>
+      <p style="font-size: 13px;"><strong>Expira:</strong> <span id="info-exp" style="color:#ff1493;">---</span></p>
+      <p style="font-size: 13px;"><strong>Tempo Restante:</strong> <br><span id="cronometro">--:--:--</span></p>
+      <hr>
+      <p style="font-size: 12px; color: #fff; text-align: center;"><strong>Dica:</strong> Ative com o jogo aberto.</p>
+     </div>
+    </div>
+   </div>
+   <div class="inject-container">
+    <button id="injectButton" onclick="injectFunctions()">INJETAR FUNÇÕES NO JOGO</button>
+   </div>
+  </div>
+  <script>
+    const firebaseConfig = { databaseURL: "https://painel-speed-a0c72-default-rtdb.firebaseio.com/" };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    
+    let timerInterval;
+    function showError(texto) {
+        const erroDiv = document.getElementById('error-msg');
+        erroDiv.innerText = texto;
+        erroDiv.style.display = 'block';
+        setTimeout(() => { erroDiv.style.display = 'none'; }, 4000);
+    }
+    function startTimer(targetTime) {
+        if (timerInterval) clearInterval(timerInterval);
+        
+        function update() {
+            const agora = new Date().getTime();
+            const diff = targetTime - agora;
+            if (diff <= 0) {
+                document.getElementById('cronometro').innerText = "EXPIRADO";
+                clearInterval(timerInterval);
+                return;
+            }
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            // Adiciona um zero na frente se for menor que 10
+            const hh = h < 10 ? "0" + h : h;
+            const mm = m < 10 ? "0" + m : m;
+            const ss = s < 10 ? "0" + s : s;
+            document.getElementById('cronometro').innerText = `${hh}h ${mm}m ${ss}s`;
+        }
+        
+        update();
+        timerInterval = setInterval(update, 1000);
+    }
+    function checkLogin() {
+        const keyDigitada = document.getElementById('inputKey').value;
+        if(!keyDigitada) {
+            showError("⚠️ Digite uma Key!");
+            return;
+        }
+        database.ref('clientes/' + keyDigitada).once('value').then((snapshot) => {
+            const data = snapshot.val();
+            if(data) {
+                const agora = new Date().getTime();
+                if(data.expira !== "VITALICIO" && agora > data.expira) {
+                    showError("❌ Esta Key expirou!");
+                } else {
+                    document.getElementById('info-key').innerText = data.key;
+                    
+                    if(data.expira === "VITALICIO") {
+                        document.getElementById('info-exp').innerText = "VITALÍCIO";
+                        document.getElementById('cronometro').innerText = "ILIMITADO";
+                    } else {
+                        // Mostra data e hora de expiração
+                        const d = new Date(data.expira);
+                        const dataFormatada = d.toLocaleDateString() + " às " + d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
+                        document.getElementById('info-exp').innerText = dataFormatada;
+                        
+                        // Inicia o cronômetro
+                        startTimer(data.expira);
+                    }
+                    
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('menuMain').style.display = 'block';
+                }
+            } else {
+                showError("❌ Key incorreta ou inexistente!");
+            }
+        });
+    }
+    function showTab(tab) {
+        document.getElementById('aimbotTab').style.display = tab === 'aimbot' ? 'block' : 'none';
+        document.getElementById('infoTab').style.display = tab === 'info' ? 'block' : 'none';
+        
+        if(tab === 'aimbot') {
+            document.getElementById('btn-aimbot').classList.add('active');
+            document.getElementById('btn-info').classList.remove('active');
+        } else {
+            document.getElementById('btn-info').classList.add('active');
+            document.getElementById('btn-aimbot').classList.remove('active');
+        }
+    }
+    document.getElementById('fovSlider').addEventListener('input', e => {
+        document.getElementById('fovValue').innerText = e.target.value;
+    });
+    function injectFunctions() {
+        const btn = document.getElementById('injectButton');
+        btn.innerText = "INJETANDO...";
+        setTimeout(() => {
+            window.location.href = "freefireth://";
+            btn.innerText = "SUCESSO!";
+        }, 1500);
+    }
+    particlesJS("particles-js", {
+        particles: {
+            number: { value: 300, density: { enable: true, value_area: 800 } },
+            color: { value: "#ff1493" },
+            shape: { type: "circle" },
+            opacity: { value: 0.8, random: true },
+            size: { value: 4, random: true },
+            line_linked: { 
+                enable: true, 
+                distance: 90, 
+                color: "#ff1493", 
+                opacity: 0.6, 
+                width: 1.5 
+            },
+            move: { enable: true, speed: 4, direction: "none", random: true, straight: false, out_mode: "out" }
+        },
+        interactivity: { detect_on: "canvas", events: { onhover: { enable: false } } },
+        retina_detect: true
+    });
+  </script>
+ </body>
+  </html>
